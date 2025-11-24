@@ -20,15 +20,28 @@
                     Temukan resep-resep terbaik dari pengguna lainnya!!!
                 </p>
             </div>
-            <a
-                href="/add-recipe"
-                class="flex items-center gap-2 rounded-lg bg-resepin-tomato px-6 py-3 font-medium text-white shadow-md transition hover:brightness-95"
-            >
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Tambah Resep
-            </a>
+
+            @auth
+                <a
+                    href="{{ route('recipes.create') }}"
+                    class="flex items-center gap-2 rounded-lg bg-resepin-tomato px-6 py-3 font-medium text-white shadow-md transition hover:brightness-95"
+                >
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Tambah Resep
+                </a>
+            @else
+                <a
+                    href="{{ route('login') }}"
+                    class="flex items-center gap-2 rounded-lg bg-resepin-tomato px-6 py-3 font-medium text-white shadow-md transition hover:brightness-95"
+                >
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Tambah Resep
+                </a>
+            @endauth
         </div>
 
         <!-- Recipes Grid -->
@@ -54,9 +67,9 @@
                     @foreach ($recipes as $recipe)
                         <x-recipe-card
                             class="shadow-md hover:shadow-lg"
-                            :image="$recipe->image"
+                            :image="asset('storage/' . $recipe->image)"
                             :title="$recipe->title"
-                            :chef="$recipe->chef"
+                            :chef="optional($recipe->user)->name ?? $recipe->chef"
                             :href="route('recipes.show', $recipe->slug)"
                         >
                             <x-slot:meta>

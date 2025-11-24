@@ -14,7 +14,7 @@
             <div class="grid gap-0 md:grid-cols-[1.35fr_1fr]">
                 <div class="relative">
                     <img
-                        src="{{ $recipe->image }}"
+                        src="{{ asset('storage/' . $recipe->image) }}"
                         alt="Foto {{ $recipe->title }}"
                         class="h-full w-full object-cover"
                     />
