@@ -15,10 +15,6 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-
-                    <x-nav-link :href="url('/articles')" :active="request()->routeIs('articles.*')">
-                        {{ __('Artikel') }}
-                    </x-nav-link>
                 </div>
             </div>
 
@@ -86,9 +82,9 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="url('/articles')" :active="request()->routeIs('articles.*')">
+            <!-- <x-responsive-nav-link :href="url('/articles')" :active="request()->routeIs('articles.*')">
                 {{ __('Artikel') }}
-            </x-responsive-nav-link>
+            </x-responsive-nav-link> -->
         </div>
 
         <!-- Responsive Settings -->
@@ -117,7 +113,7 @@
             @guest
                 <div class="mt-3 space-y-2 px-4">
                     <a href="{{ route('login') }}" class="block text-sm font-medium text-resepin-tomato">Login</a>
-                    <a href="{{ route('register') }}" class="block text-sm font-medium text-resepin-tomato">Register</a>
+                    <!-- <a href="{{ route('register') }}" class="block text-sm font-medium text-resepin-tomato">Register</a> -->
                 </div>
             @endguest
         </div>

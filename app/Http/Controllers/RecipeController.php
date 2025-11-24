@@ -63,4 +63,5 @@ class RecipeController extends Controller
             'relatedRecipes' => $relatedRecipes,
         ]);
     }
+    
 }
