@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\RecipeLike;
 use App\Models\RecipeComment;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class Recipe extends Model
@@ -26,6 +28,7 @@ class Recipe extends Model
         'difficulty',
         'ingredients',
         'steps',
+        'user_id', // added
     ];
 
     protected $casts = [
@@ -33,6 +36,7 @@ class Recipe extends Model
         'ingredients' => 'array',
         'steps' => 'array',
         'liked_by_current_user' => 'boolean',
+        'user_id' => 'integer', // added
     ];
 
     protected $appends = [
@@ -47,6 +51,12 @@ class Recipe extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(RecipeComment::class);
+    }
+
+    // new: relation to user who created recipe
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function scopeWithLikeMeta($query): void

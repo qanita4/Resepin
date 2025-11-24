@@ -5,17 +5,23 @@ use App\Http\Controllers\RecipeCommentController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RecipeLikeController;
 use Illuminate\Support\Facades\Route;
-// Route::get('/', function () {
-//     return view('dashboard');
-// });
 
 Route::get('/', [RecipeController::class, 'index'])
     // ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-    Route::get('/dashboard', [RecipeController::class, 'index'])
+Route::get('/dashboard', [RecipeController::class, 'index'])
     // ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+// -- create & store harus sebelum route show supaya '/recipes/create' tidak tertangkap oleh {recipe:slug}
+Route::get('/recipes/create', [RecipeController::class, 'create'])
+    ->middleware(['auth'])
+    ->name('recipes.create');
+
+Route::post('/recipes', [RecipeController::class, 'store'])
+    ->middleware(['auth'])
+    ->name('recipes.store');
 
 Route::get('/recipes/{recipe:slug}', [RecipeController::class, 'show'])
     // ->middleware(['auth', 'verified'])
