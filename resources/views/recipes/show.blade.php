@@ -11,13 +11,15 @@
         </a>
 
         <article class="overflow-hidden rounded-3xl bg-white shadow-sm">
-            <div class="grid gap-0 md:grid-cols-[1.35fr_1fr]">
-                <div class="relative">
-                    <img
-                        src="{{ $recipe->image }}"
-                        alt="Foto {{ $recipe->title }}"
-                        class="h-full w-full object-cover"
-                    />
+            <div class="grid gap-0 md:grid-cols-[1.25fr_1fr]">
+                <div class="relative overflow-hidden rounded-t-3xl md:rounded-none md:rounded-l-3xl">
+                    <div class="h-60 md:h-auto md:aspect-[4/3]">
+                        <img
+                            src="{{ $recipe->image }}"
+                            alt="Foto {{ $recipe->title }}"
+                            class="h-full w-full object-cover"
+                        />
+                    </div>
 
                     @if (! empty($recipe->badge))
                         <span class="absolute left-4 top-4 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-resepin-tomato shadow">
@@ -178,10 +180,10 @@
                     <p class="text-gray-500">Coba juga kreasi favorit lainnya dari Resepin.</p>
                 </div>
 
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($relatedRecipes as $related)
                         <x-recipe-card
-                            class="rounded-2xl"
+                            class="flex h-full flex-col rounded-2xl"
                             content-class="p-5"
                             actions-class="mt-5"
                             :image="$related->image"
