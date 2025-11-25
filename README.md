@@ -45,7 +45,7 @@ Make sure the following tools are installed:
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/<your-account>/resepin.git
+git clone https://github.com/nitashaf/resepin.git
 cd resepin
 ```
 
