@@ -13,6 +13,10 @@ Route::get('/dashboard', [RecipeController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::get('/recipes', [RecipeController::class, 'all'])
+    ->middleware(['auth', 'verified'])
+    ->name('recipes.all');
+
 Route::get('/recipes/create', [RecipeController::class, 'create'])
     ->middleware(['auth', 'verified'])
     ->name('recipes.create');

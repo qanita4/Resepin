@@ -63,7 +63,6 @@
                     @else
                         <span class="flex items-center gap-2">
                             🔥 Resep Populer
-                            <span class="rounded-full bg-resepin-tomato/10 px-3 py-1 text-sm font-medium text-resepin-tomato">Top 6</span>
                         </span>
                     @endif
                 </h2>
@@ -113,5 +112,54 @@
                 </div>
             @endif
         </div>
+
+        <!-- Resep Terbaru -->
+        @if ($latestRecipes->isNotEmpty())
+            <div class="mb-8">
+                <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <h2 class="text-2xl font-bold text-gray-900">
+                        <span class="flex items-center gap-2">
+                            ✨ Resep Terbaru
+                        </span>
+                    </h2>
+                    <span class="text-gray-500">{{ $latestRecipes->count() }} resep</span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($latestRecipes as $recipe)
+                        <x-recipe-card
+                            class="shadow-md hover:shadow-lg"
+                            :image="$recipe->image"
+                            :title="$recipe->title"
+                            :chef="$recipe->chef"
+                            :href="route('recipes.show', $recipe->slug)"
+                        >
+                            <x-slot:meta>
+                                <div class="flex items-center gap-3">
+                                    <x-like-button
+                                        :recipe="$recipe"
+                                        :likes-count="$recipe->likes_count ?? 0"
+                                        :is-liked="$recipe->is_liked"
+                                    />
+                                    <span class="text-xs text-gray-400">{{ $recipe->created_at->diffForHumans() }}</span>
+                                </div>
+                            </x-slot:meta>
+                        </x-recipe-card>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        <!-- Button Lihat Semua (hanya di dashboard utama) -->
+        @if (empty($currentFilter) && empty($currentKategori) && empty($searchQuery))
+            <div class="mt-8 text-center">
+                <a href="{{ route('recipes.all') }}" class="inline-flex items-center gap-2 rounded-lg bg-resepin-tomato px-6 py-3 text-base font-medium text-white shadow-md transition hover:brightness-95">
+                    Lihat Semua
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
+            </div>
+        @endif
     </main>
 </x-app-layout>

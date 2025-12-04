@@ -64,11 +64,50 @@ class RecipeController extends Controller
             $recipes = $baseQuery->orderByDesc('likes_count')->take(6)->get();
         }
 
+        // Get latest recipes (only for default view)
+        $latestRecipes = collect();
+        if (empty($filter) && empty($kategori) && $query->isEmpty()) {
+            $latestRecipes = Recipe::query()
+                ->withLikeMeta()
+                ->orderByDesc('created_at')
+                ->take(6)
+                ->get();
+        }
+
         return view('dashboard', [
             'recipes' => $recipes,
             'searchQuery' => $query->toString(),
             'currentFilter' => $filter,
             'currentKategori' => $kategori,
+            'latestRecipes' => $latestRecipes,
+        ]);
+    }
+
+    public function all(Request $request): View
+    {
+        $query = $request->string('q')->trim();
+
+        $baseQuery = Recipe::query()
+            ->withLikeMeta()
+            ->withCount('comments');
+
+        // Search
+        $baseQuery->when($query->isNotEmpty(), function ($builder) use ($query) {
+            $search = Str::lower($query->toString());
+
+            $builder->where(function ($subQuery) use ($search) {
+                $subQuery
+                    ->whereRaw('LOWER(title) like ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(chef) like ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(description) like ?', ["%{$search}%"]);
+            });
+        });
+
+        $recipes = $baseQuery->orderByDesc('created_at')->paginate(9);
+
+        return view('recipes.all', [
+            'recipes' => $recipes,
+            'searchQuery' => $query->toString(),
         ]);
     }
 

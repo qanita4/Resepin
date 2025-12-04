@@ -160,23 +160,6 @@
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <div>
-                        <label for="badge" class="mb-1 block font-medium text-gray-700">
-                            Badge/Label
-                        </label>
-                        <input
-                            type="text"
-                            name="badge"
-                            id="badge"
-                            value="{{ old('badge') }}"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                            placeholder="Contoh: Favorit Keluarga"
-                        >
-                        @error('badge')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
                 </div>
             </div>
 
