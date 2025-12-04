@@ -1,5 +1,15 @@
 <x-app-layout>
     <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <!-- Hero Title -->
+        <div class="mb-6 text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight text-resepin-tomato sm:text-5xl">
+                RESEPIN
+            </h1>
+            <p class="mt-2 text-lg text-gray-600">
+                Temukan & Bagikan Resep Favoritmu
+            </p>
+        </div>
+
         <!-- Search Section -->
         <div class="mb-8">
             <x-search-bar
@@ -10,44 +20,67 @@
             />
         </div>
 
-        <!-- Welcome Section -->
-        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h1 class="mb-2 text-3xl font-bold text-gray-900">
-                    Selamat Datang di Resepin! 👋
-                </h1>
-                <p class="text-lg text-gray-600">
-                    Temukan resep-resep terbaik dari chef berpengalaman
-                </p>
+        <!-- Success Message -->
+        @if (session('success'))
+            <div class="mb-6 rounded-lg bg-green-100 p-4 text-green-700">
+                {{ session('success') }}
             </div>
-            <a
-                href="{{ route('recipes.create') }}"
-                class="flex items-center gap-2 rounded-lg bg-resepin-tomato px-6 py-3 font-medium text-white shadow-md transition hover:brightness-95"
-            >
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Tambah Resep
-            </a>
-        </div>
+        @endif
 
         <!-- Recipes Grid -->
         <div class="mb-8">
             <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 class="text-2xl font-bold text-gray-900">
-                    Resep Populer
+                    @if ($currentFilter === 'my')
+                        <span class="flex items-center gap-2">
+                            📖 Resep Saya
+                        </span>
+                    @elseif (!empty($currentKategori))
+                        <span class="flex items-center gap-2">
+                            @switch($currentKategori)
+                                @case('sarapan')
+                                    🌅 Sarapan
+                                    @break
+                                @case('makan-siang')
+                                    ☀️ Makan Siang
+                                    @break
+                                @case('makan-malam')
+                                    🌙 Makan Malam
+                                    @break
+                                @case('minuman')
+                                    🥤 Minuman
+                                    @break
+                                @case('camilan')
+                                    🍿 Camilan
+                                    @break
+                                @case('dessert')
+                                    🍰 Dessert
+                                    @break
+                            @endswitch
+                        </span>
+                    @elseif ($searchQuery)
+                        Hasil Pencarian "{{ $searchQuery }}"
+                    @else
+                        <span class="flex items-center gap-2">
+                            🔥 Resep Populer
+                            <span class="rounded-full bg-resepin-tomato/10 px-3 py-1 text-sm font-medium text-resepin-tomato">Top 6</span>
+                        </span>
+                    @endif
                 </h2>
-                <a
-                    href="#"
-                    class="inline-flex items-center rounded-lg border-2 border-resepin-green px-4 py-2 font-medium text-resepin-green transition hover:bg-resepin-green/10"
-                >
-                    Lihat Semua
-                </a>
+                <span class="text-gray-500">{{ $recipes->count() }} resep</span>
             </div>
 
             @if ($recipes->isEmpty())
                 <div class="rounded-xl border border-dashed border-gray-300 bg-white p-8 text-center text-gray-500">
-                    Resep tidak ditemukan. Coba kata kunci lainnya.
+                    @if ($currentFilter === 'my')
+                        Anda belum memiliki resep. <a href="{{ route('recipes.create') }}" class="text-resepin-green hover:underline">Tambah resep pertama Anda!</a>
+                    @elseif (!empty($currentKategori))
+                        Belum ada resep untuk kategori ini. <a href="{{ route('recipes.create') }}" class="text-resepin-green hover:underline">Tambah resep!</a>
+                    @elseif ($searchQuery)
+                        Resep tidak ditemukan. Coba kata kunci lainnya.
+                    @else
+                        Belum ada resep populer. Jadilah yang pertama menambah resep!
+                    @endif
                 </div>
             @else
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -60,11 +93,20 @@
                             :href="route('recipes.show', $recipe->slug)"
                         >
                             <x-slot:meta>
-                                <x-like-button
-                                    :recipe="$recipe"
-                                    :likes-count="$recipe->likes_count ?? 0"
-                                    :is-liked="$recipe->is_liked"
-                                />
+                                <div class="flex items-center gap-3">
+                                    <x-like-button
+                                        :recipe="$recipe"
+                                        :likes-count="$recipe->likes_count ?? 0"
+                                        :is-liked="$recipe->is_liked"
+                                    />
+                                    @if ($currentFilter === 'my' || (Auth::check() && $recipe->user_id === Auth::id()))
+                                        <a href="{{ route('recipes.edit', $recipe) }}" class="text-gray-400 hover:text-resepin-green" title="Edit">
+                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </a>
+                                    @endif
+                                </div>
                             </x-slot:meta>
                         </x-recipe-card>
                     @endforeach

@@ -25,6 +25,18 @@ Route::get('/recipes/{recipe:slug}', [RecipeController::class, 'show'])
     ->middleware(['auth', 'verified'])
     ->name('recipes.show');
 
+Route::get('/recipes/{recipe:slug}/edit', [RecipeController::class, 'edit'])
+    ->middleware(['auth', 'verified'])
+    ->name('recipes.edit');
+
+Route::put('/recipes/{recipe:slug}', [RecipeController::class, 'update'])
+    ->middleware(['auth', 'verified'])
+    ->name('recipes.update');
+
+Route::delete('/recipes/{recipe:slug}', [RecipeController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('recipes.destroy');
+
 Route::post('/recipes/{recipe:slug}/likes', [RecipeLikeController::class, 'store'])
     ->middleware(['auth', 'verified'])
     ->name('recipes.likes.store');

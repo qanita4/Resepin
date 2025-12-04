@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\RecipeLike;
 use App\Models\RecipeComment;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class Recipe extends Model
@@ -14,6 +16,7 @@ class Recipe extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'slug',
         'title',
         'chef',
@@ -24,6 +27,7 @@ class Recipe extends Model
         'duration',
         'servings',
         'difficulty',
+        'category',
         'ingredients',
         'steps',
     ];
@@ -47,6 +51,11 @@ class Recipe extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(RecipeComment::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function scopeWithLikeMeta($query): void
