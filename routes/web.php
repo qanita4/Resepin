@@ -13,6 +13,14 @@ Route::get('/dashboard', [RecipeController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::get('/recipes/create', [RecipeController::class, 'create'])
+    ->middleware(['auth', 'verified'])
+    ->name('recipes.create');
+
+Route::post('/recipes', [RecipeController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('recipes.store');
+
 Route::get('/recipes/{recipe:slug}', [RecipeController::class, 'show'])
     ->middleware(['auth', 'verified'])
     ->name('recipes.show');

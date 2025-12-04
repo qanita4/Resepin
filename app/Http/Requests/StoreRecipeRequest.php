@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreRecipeRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
+            'badge' => ['nullable', 'string', 'max:100'],
+            'duration' => ['nullable', 'string', 'max:100'],
+            'servings' => ['nullable', 'string', 'max:100'],
+            'difficulty' => ['nullable', 'string', 'in:Mudah,Sedang,Sulit'],
+            'ingredients' => ['required', 'array', 'min:1'],
+            'ingredients.*' => ['required', 'string'],
+            'steps' => ['required', 'array', 'min:1'],
+            'steps.*' => ['required', 'string'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Judul resep wajib diisi.',
+            'title.max' => 'Judul resep maksimal 255 karakter.',
+            'image.image' => 'File harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.',
+            'difficulty.in' => 'Tingkat kesulitan harus Mudah, Sedang, atau Sulit.',
+            'ingredients.required' => 'Bahan-bahan wajib diisi.',
+            'ingredients.min' => 'Minimal harus ada 1 bahan.',
+            'ingredients.*.required' => 'Setiap bahan tidak boleh kosong.',
+            'steps.required' => 'Langkah-langkah wajib diisi.',
+            'steps.min' => 'Minimal harus ada 1 langkah.',
+            'steps.*.required' => 'Setiap langkah tidak boleh kosong.',
+        ];
+    }
+}

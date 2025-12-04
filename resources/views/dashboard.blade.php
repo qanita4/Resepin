@@ -21,7 +21,7 @@
                 </p>
             </div>
             <a
-                href="/add-recipe"
+                href="{{ route('recipes.create') }}"
                 class="flex items-center gap-2 rounded-lg bg-resepin-tomato px-6 py-3 font-medium text-white shadow-md transition hover:brightness-95"
             >
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

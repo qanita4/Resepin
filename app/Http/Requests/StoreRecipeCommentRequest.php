@@ -14,7 +14,12 @@ class StoreRecipeCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'comment' => ['required', 'string', 'max:2000'],
+            'comment' => [
+                'required',
+                'string',
+                'max:2000',
+                'not_regex:/<\\s*script\\b/i',
+            ],
         ];
     }
 }

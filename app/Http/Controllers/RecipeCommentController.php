@@ -12,9 +12,18 @@ class RecipeCommentController extends Controller
 {
     public function store(StoreRecipeCommentRequest $request, Recipe $recipe): RedirectResponse
     {
+
+        $sanitizedComment = trim(strip_tags($request->validated()['comment']));
+
+        if ($sanitizedComment === '') {
+            return back()
+                ->withErrors(['comment' => 'Komentar tidak boleh mengandung skrip atau tag HTML.'])
+                ->withInput();
+        }
+
         $recipe->comments()->create([
             'user_id' => Auth::id(),
-            'comment' => $request->validated()['comment'],
+            'comment' => $sanitizedComment,
         ]);
 
         return back()->with('status', 'Komentar berhasil ditambahkan.');
