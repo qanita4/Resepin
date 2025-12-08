@@ -67,7 +67,7 @@
                     @foreach ($recipes as $recipe)
                         <x-recipe-card
                             class="shadow-md hover:shadow-lg"
-                            :image="asset('storage/' . $recipe->image)"
+                            :image="$recipe->image"
                             :title="$recipe->title"
                             :chef="optional($recipe->user)->name ?? $recipe->chef"
                             :href="route('recipes.show', $recipe->slug)"

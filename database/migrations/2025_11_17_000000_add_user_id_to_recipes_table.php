@@ -27,16 +27,16 @@ return new class extends Migration
     }
 };
 
-use Illuminate\Support\Facades\Schema;
+// use Illuminate\Support\Facades\Schema;
 
-public function store(Request $request)
-{
-    // ...validasi & proses image, normalizeList, slug...
-    if (Auth::check() && Schema::hasColumn('recipes', 'user_id')) {
-        $data['user_id'] = Auth::id();
-    }
+// public function store(Request $request)
+// {
+//     // ...validasi & proses image, normalizeList, slug...
+//     if (Auth::check() && Schema::hasColumn('recipes', 'user_id')) {
+//         $data['user_id'] = Auth::id();
+//     }
 
-    $recipe = Recipe::create($data);
+//     $recipe = Recipe::create($data);
 
-    return redirect()->route('dashboard')->with('success', 'Resep berhasil ditambahkan.');
-}
+//     return redirect()->route('dashboard')->with('success', 'Resep berhasil ditambahkan.');
+// }
