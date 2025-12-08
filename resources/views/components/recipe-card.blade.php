@@ -20,7 +20,7 @@
 @endphp
 
 <div {{ $attributes->merge(['class' => 'overflow-hidden rounded-xl bg-white shadow-sm transition-shadow duration-300 hover:shadow-md']) }}>
-    <div class="relative aspect-[4/3] overflow-hidden">
+    <a href="{{ $href }}" class="block relative aspect-[4/3] overflow-hidden">
         <img
             src="{{ $image }}"
             alt="{{ $imageAlt }}"
@@ -32,14 +32,16 @@
                 {{ $badge }}
             </span>
         @endif
-    </div>
+    </a>
 
     <div class="{{ $contentClasses }}">
         @if ($badge && $badgePosition === 'content')
             <p class="text-xs font-semibold uppercase tracking-wide text-resepin-tomato">{{ $badge }}</p>
         @endif
 
-        <h3 class="{{ $badge && $badgePosition === 'content' ? 'mt-1' : 'mt-0' }} text-lg font-semibold text-gray-900">{{ $title }}</h3>
+        <a href="{{ $href }}" class="block">
+            <h3 class="{{ $badge && $badgePosition === 'content' ? 'mt-1' : 'mt-0' }} text-lg font-semibold text-gray-900 hover:text-resepin-tomato transition-colors">{{ $title }}</h3>
+        </a>
 
         @if ($chef || $hasMetaSlot)
             <div class="mb-4 mt-2 flex items-center justify-between">
