@@ -6,15 +6,15 @@ use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RecipeLikeController;
 use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
 
 Route::get('/dashboard', [RecipeController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    // ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
 Route::get('/recipes', [RecipeController::class, 'all'])
-    ->middleware(['auth', 'verified'])
+    // ->middleware(['auth', 'verified'])
     ->name('recipes.all');
 
 Route::get('/recipes/create', [RecipeController::class, 'create'])
@@ -26,7 +26,7 @@ Route::post('/recipes', [RecipeController::class, 'store'])
     ->name('recipes.store');
 
 Route::get('/recipes/{recipe:slug}', [RecipeController::class, 'show'])
-    ->middleware(['auth', 'verified'])
+    // ->middleware(['auth', 'verified'])
     ->name('recipes.show');
 
 Route::get('/recipes/{recipe:slug}/edit', [RecipeController::class, 'edit'])

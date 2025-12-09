@@ -52,51 +52,57 @@
 
             <!-- Right Side: Profile + Tambah Resep -->
             <div class="hidden sm:flex sm:items-center sm:ms-6 sm:gap-4">
-                <!-- Profile Dropdown -->
-                <x-dropdown align="right" width="48" class="relative">
-                    <x-slot name="trigger">
-                        <button aria-haspopup="true" aria-expanded="false" aria-label="Open user menu" class="relative inline-flex items-center p-0.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-resepin-tomato">
-                            <span class="sr-only">Open user menu</span>
-                            <img
-                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                alt="{{ Auth::user()->name }} avatar"
-                                width="32"
-                                height="32"
-                                class="rounded-full object-cover"
-                                style="width: 32px; height: 32px;"
-                            />
-                        </button>
-                    </x-slot>
+                @auth
+                    <!-- Profile Dropdown -->
+                    <x-dropdown align="right" width="48" class="relative">
+                        <x-slot name="trigger">
+                            <button aria-haspopup="true" aria-expanded="false" aria-label="Open user menu" class="relative inline-flex items-center p-0.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-resepin-tomato">
+                                <span class="sr-only">Open user menu</span>
+                                <img
+                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                    alt="{{ Auth::user()->name }} avatar"
+                                    width="32"
+                                    height="32"
+                                    class="rounded-full object-cover"
+                                    style="width: 32px; height: 32px;"
+                                />
+                            </button>
+                        </x-slot>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <x-dropdown-link :href="route('dashboard', ['filter' => 'my'])">
-                            {{ __('Resep Saya') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
                             </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
 
-                <!-- Tambah Resep Button -->
-                <a href="{{ route('recipes.create') }}" class="inline-flex items-center gap-2 rounded-lg bg-resepin-tomato px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-95">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Tambah Resep
-                </a>
+                            <x-dropdown-link :href="route('dashboard', ['filter' => 'my'])">
+                                {{ __('Resep Saya') }}
+                            </x-dropdown-link>
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <x-dropdown-link :href="route('logout')"
+                                        onclick="event.preventDefault();
+                                                    this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+
+                    <!-- Tambah Resep Button -->
+                    <a href="{{ route('recipes.create') }}" class="inline-flex items-center gap-2 rounded-lg bg-resepin-tomato px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-95">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Tambah Resep
+                    </a>
+                @else
+                    <div>
+                        <a href="{{ route('login') }}" class="inline-flex items-center gap-2 rounded-lg bg-resepin-tomato px-4 py-2 text-sm font-medium text-white">Masuk?</a>
+                    </div>
+                @endauth
             </div>
 
             <!-- Hamburger -->
@@ -155,29 +161,37 @@
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-resepin-tomato/20">
             <div class="px-4">
-                <div class="font-medium text-sm text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                @auth
+                    <div class="font-medium text-sm text-gray-800">{{ Auth::user()->name }}</div>
+                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                @else
+                    <div>
+                        <a href="{{ route('login') }}" class="flex items-center justify-center gap-2 rounded-lg bg-resepin-tomato px-4 py-2 text-sm font-medium text-white">Masuk?</a>
+                    </div>
+                @endauth
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <x-responsive-nav-link :href="route('dashboard', ['filter' => 'my'])">
-                    {{ __('Resep Saya') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                @auth
+                    <x-responsive-nav-link :href="route('profile.edit')">
+                        {{ __('Profile') }}
                     </x-responsive-nav-link>
-                </form>
+
+                    <x-responsive-nav-link :href="route('dashboard', ['filter' => 'my'])">
+                        {{ __('Resep Saya') }}
+                    </x-responsive-nav-link>
+
+                    <!-- Authentication -->
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+
+                        <x-responsive-nav-link :href="route('logout')"
+                                onclick="event.preventDefault();
+                                            this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-responsive-nav-link>
+                    </form>
+                @endauth
             </div>
         </div>
     </div>

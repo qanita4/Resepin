@@ -1,44 +1,93 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login/Signup Form</title>
+  <link rel="stylesheet" href="{{ asset('assets/loginpage.css') }}" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="container">
+    <!-- Login Form -->
+    <div class="form-box login">
+      <form id="loginForm" method="POST" action="{{ route('login') }}">
+          @csrf
+          <h1>Login</h1>
+          <div class="input-box">
+            <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required />
+            <i class='bx bxs-user'></i>
+          </div>
+          <div class="input-box">
+            <input type="password" name="password" placeholder="Password" required />
+            <i class='bx bxs-lock-alt'></i>
+          </div>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-slate-900 antialiased">
-        <div class="relative min-h-screen bg-gradient-to-b from-resepin-cream via-white to-resepin-cream flex flex-col items-center justify-center px-6 py-12 sm:py-20">
-            <div class="absolute inset-0 -z-10 overflow-hidden">
-                <div class="absolute -top-20 -left-16 h-64 w-64 rounded-full bg-resepin-tomato/20 blur-3xl"></div>
-                <div class="absolute bottom-0 right-[-4rem] h-72 w-72 rounded-full bg-resepin-green/20 blur-3xl"></div>
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,77,77,0.08),_transparent_55%)]"></div>
+          @if ($errors->any())
+            <div class="alert alert-danger">
+              @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+              @endforeach
             </div>
+          @endif
 
-            <div class="text-center space-y-4">
-                <a href="/" class="inline-flex items-center justify-center">
-                    <x-application-logo class="w-20 h-20 fill-current text-resepin-tomato drop-shadow-md" />
-                </a>
-                <div class="space-y-1">
-                    <p class="text-sm uppercase tracking-[0.3em] text-resepin-tomato/80">Selamat datang di Resepin</p>
-                    <h1 class="text-3xl font-semibold text-slate-900">Masuk dan lanjutkan petualangan masakmu 🍳</h1>
-                    <p class="text-sm text-slate-600">Kumpulkan resep favorit, simpan inspirasi baru, dan bagikan masakan terbaikmu.</p>
-                </div>
-            </div>
+          <div class="forgot-link">
+            <a href="{{ route('password.request') }}">Lupa Password?</a>
+          </div>
+          <button type="submit" class="btn">Login</button>
+          <p><a href="/">Masuk sebagai Guest</a></p>
+      </form>
+    </div>
 
-            <div class="mt-10 w-full sm:max-w-lg">
-                <div class="rounded-3xl border border-resepin-tomato/20 bg-white/80 p-8 shadow-xl shadow-resepin-tomato/10 backdrop-blur">
-                    {{ $slot }}
-                </div>
-            </div>
-            <p class="mt-10 text-xs text-slate-500">© {{ date('Y') }} Resepin. Semua hak cipta dilindungi.</p>
+    <!-- Register Form -->
+    <div class="form-box register">
+      <form id="registerForm" method="POST" action="{{ route('register') }}">
+        @csrf
+        <h1>Registration</h1>
+        <div class="input-box">
+          <input type="text" name="name" placeholder="Name" value="{{ old('name') }}" required />
+          <i class='bx bxs-user'></i>
         </div>
-    </body>
+        <div class="input-box">
+          <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required />
+          <i class='bx bxs-envelope'></i>
+        </div>
+        <div class="input-box">
+          <input type="password" name="password" placeholder="Password" required />
+          <i class='bx bxs-lock-alt'></i>
+        </div>
+        <div class="input-box">
+          <input type="password" name="password_confirmation" placeholder="Confirm Password" required />
+          <i class='bx bxs-lock'></i>
+        </div>
+
+        @if ($errors->any())
+          <div class="alert alert-danger">
+            @foreach ($errors->all() as $error)
+              <p>{{ $error }}</p>
+            @endforeach
+          </div>
+        @endif
+
+        <button type="submit" class="btn">Register</button>
+      </form>
+    </div>
+
+    <!-- Toggle Box -->
+    <div class="toggle-box">
+      <div class="toggle-panel toggle-left">
+        <h1>Selamat Datang!</h1>
+        <p>Belum punya akun?</p>
+        <button class="btn register-btn">Sign Up</button>
+      </div>
+      <div class="toggle-panel toggle-right">
+        <h1>Selamat datang!</h1>
+        <p>Sudah punya akun?</p>
+        <button class="btn login-btn">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ asset('assets/loginpage.js') }}"></script>
+</body>
 </html>
