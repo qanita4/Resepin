@@ -24,26 +24,32 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="open" @click.away="open = false" x-transition class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                            <div class="py-1">
-                                <a href="{{ route('dashboard', ['kategori' => 'sarapan']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    🌅 Sarapan
-                                </a>
-                                <a href="{{ route('dashboard', ['kategori' => 'makan-siang']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    ☀️ Makan Siang
-                                </a>
-                                <a href="{{ route('dashboard', ['kategori' => 'makan-malam']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    🌙 Makan Malam
-                                </a>
-                                <a href="{{ route('dashboard', ['kategori' => 'minuman']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    🥤 Minuman
-                                </a>
-                                <a href="{{ route('dashboard', ['kategori' => 'camilan']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    🍿 Camilan
-                                </a>
-                                <a href="{{ route('dashboard', ['kategori' => 'dessert']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    🍰 Dessert
-                                </a>
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute left-0 mt-2 w-96 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            <div class="grid grid-cols-2 gap-1 p-2">
+                                <!-- Kolom Kiri -->
+                                <div class="space-y-1">
+                                    <a href="{{ route('dashboard', ['kategori' => 'sarapan']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition">
+                                        🌅 Sarapan
+                                    </a>
+                                    <a href="{{ route('dashboard', ['kategori' => 'makan-siang']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition">
+                                        ☀️ Makan Siang
+                                    </a>
+                                    <a href="{{ route('dashboard', ['kategori' => 'makan-malam']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition">
+                                        🌙 Makan Malam
+                                    </a>
+                                </div>
+                                <!-- Kolom Kanan -->
+                                <div class="space-y-1">
+                                    <a href="{{ route('dashboard', ['kategori' => 'minuman']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition">
+                                        🥤 Minuman
+                                    </a>
+                                    <a href="{{ route('dashboard', ['kategori' => 'camilan']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition">
+                                        🍿 Camilan
+                                    </a>
+                                    <a href="{{ route('dashboard', ['kategori' => 'dessert']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition">
+                                        🍰 Dessert
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -92,16 +98,22 @@
                     </x-dropdown>
 
                     <!-- Tambah Resep Button -->
-                    <a href="{{ route('recipes.create') }}" class="inline-flex items-center gap-2 rounded-lg bg-resepin-tomato px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-95">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
+                    <x-button 
+                        variant="primary" 
+                        size="md" 
+                        href="{{ route('recipes.create') }}"
+                        :icon="'<path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 6v6m0 0v6m0-6h6m-6 0H6\' />'"
+                    >
                         Tambah Resep
-                    </a>
+                    </x-button>
                 @else
-                    <div>
-                        <a href="{{ route('login') }}" class="inline-flex items-center gap-2 rounded-lg bg-resepin-tomato px-4 py-2 text-sm font-medium text-white">Masuk?</a>
-                    </div>
+                    <x-button 
+                        variant="primary" 
+                        size="md" 
+                        href="{{ route('login') }}"
+                    >
+                        Masuk?
+                    </x-button>
                 @endauth
             </div>
 
@@ -149,12 +161,15 @@
 
             <!-- Tambah Resep -->
             <div class="px-4 pt-2">
-                <a href="{{ route('recipes.create') }}" class="flex items-center justify-center gap-2 rounded-lg bg-resepin-tomato px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-95">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
+                <x-button 
+                    variant="primary" 
+                    size="md" 
+                    href="{{ route('recipes.create') }}"
+                    class="w-full"
+                    :icon="'<path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 6v6m0 0v6m0-6h6m-6 0H6\' />'"
+                >
                     Tambah Resep
-                </a>
+                </x-button>
             </div>
         </div>
 
@@ -166,7 +181,14 @@
                     <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
                 @else
                     <div>
-                        <a href="{{ route('login') }}" class="flex items-center justify-center gap-2 rounded-lg bg-resepin-tomato px-4 py-2 text-sm font-medium text-white">Masuk?</a>
+                        <x-button 
+                            variant="primary" 
+                            size="md" 
+                            href="{{ route('login') }}"
+                            class="w-full"
+                        >
+                            Masuk?
+                        </x-button>
                     </div>
                 @endauth
             </div>

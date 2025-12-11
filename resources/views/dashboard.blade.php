@@ -2,7 +2,8 @@
     <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <!-- Hero Title -->
         <div class="mb-6 text-center">
-            <h1 class="text-4xl font-extrabold tracking-tight text-resepin-tomato sm:text-5xl">
+            {{-- <h1 class="text-8xl font-extrabold tracking-tight text-resepin-tomato sm:text-5xl"> --}}
+            <h1 class="text-8xl tracking-tight text-resepin-tomato sm:text-5xl super-bold">
                 RESEPIN
             </h1>
             <p class="mt-2 text-lg text-gray-600">
@@ -22,9 +23,9 @@
 
         <!-- Success Message -->
         @if (session('success'))
-            <div class="mb-6 rounded-lg bg-green-100 p-4 text-green-700">
+            <x-alert type="success">
                 {{ session('success') }}
-            </div>
+            </x-alert>
         @endif
 
         <!-- Recipes Grid -->
@@ -153,12 +154,14 @@
         <!-- Button Lihat Semua (hanya di dashboard utama) -->
         @if (empty($currentFilter) && empty($currentKategori) && empty($searchQuery))
             <div class="mt-8 text-center">
-                <a href="{{ route('recipes.all') }}" class="inline-flex items-center gap-2 rounded-lg bg-resepin-tomato px-6 py-3 text-base font-medium text-white shadow-md transition hover:brightness-95">
+                <x-button 
+                    variant="primary" 
+                    size="lg" 
+                    href="{{ route('recipes.all') }}"
+                    :icon="'<path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M17 8l4 4m0 0l-4 4m4-4H3\' />'"
+                >
                     Lihat Semua
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                </a>
+                </x-button>
             </div>
         @endif
     </main>

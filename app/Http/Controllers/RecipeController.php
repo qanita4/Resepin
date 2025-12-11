@@ -5,78 +5,56 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
 use App\Models\Recipe;
+use App\Services\ImageUploadService;
+use App\Services\RecipeSearchService;
+use App\Services\SlugService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class RecipeController extends Controller
 {
+    public function __construct(
+        private RecipeSearchService $searchService,
+        private SlugService $slugService,
+        private ImageUploadService $imageService
+    ) {}
+
     public function index(Request $request): View
     {
-        $query = $request->string('q')->trim();
+        $searchQuery = $request->string('q')->trim()->toString();
         $filter = $request->string('filter')->trim()->toString();
         $kategori = $request->string('kategori')->trim()->toString();
 
-        // Map kategori slug to actual value
-        $kategoriMap = [
-            'sarapan' => 'sarapan',
-            'makan-siang' => 'makan siang',
-            'makan-malam' => 'makan malam',
-            'minuman' => 'minuman',
-            'camilan' => 'camilan',
-            'dessert' => 'dessert',
-        ];
-
         // Base query
-        $baseQuery = Recipe::query()
-            ->withLikeMeta()
-            ->withCount('comments');
+        $baseQuery = $this->searchService->getBaseQuery();
+        
+        // Apply search
+        $this->searchService->applySearch($baseQuery, $searchQuery);
 
-        // Search
-        $baseQuery->when($query->isNotEmpty(), function ($builder) use ($query) {
-            $search = Str::lower($query->toString());
-
-            $builder->where(function ($subQuery) use ($search) {
-                $subQuery
-                    ->whereRaw('LOWER(title) like ?', ["%{$search}%"])
-                    ->orWhereRaw('LOWER(chef) like ?', ["%{$search}%"])
-                    ->orWhereRaw('LOWER(description) like ?', ["%{$search}%"]);
-            });
-        });
-
-        // Apply filter
+        // Apply filters
         if ($filter === 'my') {
-            // Resep Saya - filter by user_id
-            $baseQuery->where('user_id', Auth::id());
+            $this->searchService->applyUserFilter($baseQuery, Auth::id());
             $recipes = $baseQuery->orderByDesc('created_at')->get();
-        } elseif (!empty($kategori) && isset($kategoriMap[$kategori])) {
-            // Filter by kategori
-            $baseQuery->whereRaw('LOWER(category) = ?', [strtolower($kategoriMap[$kategori])]);
+        } elseif (!empty($kategori)) {
+            $this->searchService->applyCategory($baseQuery, $kategori);
             $recipes = $baseQuery->orderByDesc('likes_count')->get();
-        } elseif ($query->isNotEmpty()) {
-            // Search results
+        } elseif (!empty($searchQuery)) {
             $recipes = $baseQuery->orderByDesc('created_at')->get();
         } else {
-            // Default: Resep Populer - top 6 by likes
-            $recipes = $baseQuery->orderByDesc('likes_count')->take(6)->get();
+            $recipes = $this->searchService->getPopular(6);
         }
 
         // Get latest recipes (only for default view)
         $latestRecipes = collect();
-        if (empty($filter) && empty($kategori) && $query->isEmpty()) {
-            $latestRecipes = Recipe::query()
-                ->withLikeMeta()
-                ->orderByDesc('created_at')
-                ->take(6)
-                ->get();
+        if (empty($filter) && empty($kategori) && empty($searchQuery)) {
+            $latestRecipes = $this->searchService->getLatest(6);
         }
 
         return view('dashboard', [
             'recipes' => $recipes,
-            'searchQuery' => $query->toString(),
+            'searchQuery' => $searchQuery,
             'currentFilter' => $filter,
             'currentKategori' => $kategori,
             'latestRecipes' => $latestRecipes,
@@ -85,29 +63,16 @@ class RecipeController extends Controller
 
     public function all(Request $request): View
     {
-        $query = $request->string('q')->trim();
+        $searchQuery = $request->string('q')->trim()->toString();
 
-        $baseQuery = Recipe::query()
-            ->withLikeMeta()
-            ->withCount('comments');
-
-        // Search
-        $baseQuery->when($query->isNotEmpty(), function ($builder) use ($query) {
-            $search = Str::lower($query->toString());
-
-            $builder->where(function ($subQuery) use ($search) {
-                $subQuery
-                    ->whereRaw('LOWER(title) like ?', ["%{$search}%"])
-                    ->orWhereRaw('LOWER(chef) like ?', ["%{$search}%"])
-                    ->orWhereRaw('LOWER(description) like ?', ["%{$search}%"]);
-            });
-        });
+        $baseQuery = $this->searchService->getBaseQuery();
+        $this->searchService->applySearch($baseQuery, $searchQuery);
 
         $recipes = $baseQuery->orderByDesc('created_at')->paginate(9);
 
         return view('recipes.all', [
             'recipes' => $recipes,
-            'searchQuery' => $query->toString(),
+            'searchQuery' => $searchQuery,
         ]);
     }
 
@@ -147,49 +112,55 @@ class RecipeController extends Controller
 
     public function store(StoreRecipeRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        // Generate slug dari title
-        $slug = Str::slug($validated['title']);
-        $originalSlug = $slug;
-        $counter = 1;
+            // Generate unique slug
+            $slug = $this->slugService->generateUniqueSlug($validated['title']);
 
-        // Pastikan slug unik
-        while (Recipe::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
+            // Handle image upload
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $this->imageService->upload($request->file('image'));
+            }
+
+            // Filter empty ingredients and steps
+            $ingredients = array_values(array_filter(
+                $validated['ingredients'],
+                fn($item) => !empty(trim($item))
+            ));
+            $steps = array_values(array_filter(
+                $validated['steps'],
+                fn($item) => !empty(trim($item))
+            ));
+
+            // Create recipe
+            $recipe = Recipe::create([
+                'user_id' => Auth::id(),
+                'slug' => $slug,
+                'title' => $validated['title'],
+                'chef' => Auth::user()->name,
+                'description' => $validated['description'] ?? null,
+                'image' => $imagePath,
+                'badge' => $validated['badge'] ?? null,
+                'duration' => $validated['duration'] ?? null,
+                'servings' => $validated['servings'] ?? null,
+                'difficulty' => $validated['difficulty'] ?? null,
+                'ingredients' => $ingredients,
+                'steps' => $steps,
+                'initial_rating' => 0,
+                
+            ]);
+
+            return redirect()
+                ->route('recipes.show', $recipe)
+                ->with('success', 'Resep berhasil ditambahkan!');
+                
+        } catch (\Exception $e) {
+            return back()
+                ->withInput()
+                ->withErrors(['error' => 'Gagal menyimpan resep: ' . $e->getMessage()]);
         }
-
-        // Handle upload gambar
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('recipes', 'public');
-        }
-
-        // Filter ingredients dan steps yang kosong
-        $ingredients = array_values(array_filter($validated['ingredients'], fn($item) => !empty(trim($item))));
-        $steps = array_values(array_filter($validated['steps'], fn($item) => !empty(trim($item))));
-
-        // Buat resep baru
-        $recipe = Recipe::create([
-            'user_id' => Auth::id(),
-            'slug' => $slug,
-            'title' => $validated['title'],
-            'chef' => Auth::user()->name,
-            'description' => $validated['description'] ?? null,
-            'image' => $imagePath,
-            'badge' => $validated['badge'] ?? null,
-            'duration' => $validated['duration'] ?? null,
-            'servings' => $validated['servings'] ?? null,
-            'difficulty' => $validated['difficulty'] ?? null,
-            'ingredients' => $ingredients,
-            'steps' => $steps,
-            'initial_rating' => 0,
-        ]);
-
-        return redirect()
-            ->route('recipes.show', $recipe)
-            ->with('success', 'Resep berhasil ditambahkan!');
     }
 
     public function edit(Recipe $recipe): View
@@ -213,31 +184,26 @@ class RecipeController extends Controller
 
         $validated = $request->validated();
 
-        // Handle upload gambar baru
+        // Handle image upload/update
         $imagePath = $recipe->image;
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($recipe->image) {
-                Storage::disk('public')->delete($recipe->image);
-            }
-            $imagePath = $request->file('image')->store('recipes', 'public');
+            $imagePath = $this->imageService->update($recipe->image, $request->file('image'));
         }
 
-        // Filter ingredients dan steps yang kosong
-        $ingredients = array_values(array_filter($validated['ingredients'], fn($item) => !empty(trim($item))));
-        $steps = array_values(array_filter($validated['steps'], fn($item) => !empty(trim($item))));
+        // Filter empty ingredients and steps
+        $ingredients = array_values(array_filter(
+            $validated['ingredients'],
+            fn($item) => !empty(trim($item))
+        ));
+        $steps = array_values(array_filter(
+            $validated['steps'],
+            fn($item) => !empty(trim($item))
+        ));
 
-        // Update slug jika title berubah
+        // Update slug if title changed
         $slug = $recipe->slug;
         if ($validated['title'] !== $recipe->title) {
-            $slug = Str::slug($validated['title']);
-            $originalSlug = $slug;
-            $counter = 1;
-
-            while (Recipe::where('slug', $slug)->where('id', '!=', $recipe->id)->exists()) {
-                $slug = $originalSlug . '-' . $counter;
-                $counter++;
-            }
+            $slug = $this->slugService->generateUniqueSlug($validated['title'], $recipe->id);
         }
 
         $recipe->update([
@@ -266,9 +232,7 @@ class RecipeController extends Controller
         }
 
         // Delete image if exists
-        if ($recipe->image) {
-            Storage::disk('public')->delete($recipe->image);
-        }
+        $this->imageService->delete($recipe->image);
 
         $recipe->delete();
 

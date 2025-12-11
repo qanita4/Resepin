@@ -14,53 +14,43 @@
 
         <!-- Success Message -->
         @if (session('success'))
-            <div class="mb-6 rounded-lg bg-green-100 p-4 text-green-700">
+            <x-alert type="success">
                 {{ session('success') }}
-            </div>
+            </x-alert>
+        @endif
+
+        <!-- Error Messages -->
+        @if ($errors->any())
+            <x-alert type="error">
+                <div class="font-medium">Terjadi kesalahan:</div>
+                <ul class="mt-2 list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </x-alert>
         @endif
 
         <!-- Form -->
         <form action="{{ route('recipes.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
 
-            <!-- Title -->
-            <div class="rounded-xl bg-white p-6 shadow-md">
-                <h2 class="mb-4 text-xl font-semibold text-gray-900">Informasi Dasar</h2>
-                
+            <!-- Informasi Dasar -->
+            <x-card title="Informasi Dasar">
                 <div class="space-y-4">
-                    <div>
-                        <label for="title" class="mb-1 block font-medium text-gray-700">
-                            Judul Resep <span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="title"
-                            id="title"
-                            value="{{ old('title') }}"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                            placeholder="Contoh: Nasi Goreng Spesial"
-                            required
-                        >
-                        @error('title')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-form.input
+                        name="title"
+                        label="Judul Resep"
+                        placeholder="Contoh: Nasi Goreng Spesial"
+                        required
+                    />
 
-                    <div>
-                        <label for="description" class="mb-1 block font-medium text-gray-700">
-                            Deskripsi
-                        </label>
-                        <textarea
-                            name="description"
-                            id="description"
-                            rows="3"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                            placeholder="Ceritakan sedikit tentang resep ini..."
-                        >{{ old('description') }}</textarea>
-                        @error('description')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-form.textarea
+                        name="description"
+                        label="Deskripsi"
+                        placeholder="Ceritakan sedikit tentang resep ini..."
+                        rows="3"
+                    />
 
                     <div>
                         <label for="image" class="mb-1 block font-medium text-gray-700">
@@ -79,89 +69,49 @@
                         @enderror
                     </div>
                 </div>
-            </div>
+            </x-card>
 
-            <!-- Recipe Details -->
-            <div class="rounded-xl bg-white p-6 shadow-md">
-                <h2 class="mb-4 text-xl font-semibold text-gray-900">Detail Resep</h2>
-                
+            <!-- Detail Resep -->
+            <x-card title="Detail Resep">
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label for="duration" class="mb-1 block font-medium text-gray-700">
-                            Waktu Memasak
-                        </label>
-                        <input
-                            type="text"
-                            name="duration"
-                            id="duration"
-                            value="{{ old('duration') }}"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                            placeholder="Contoh: 30 menit"
-                        >
-                        @error('duration')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-form.input
+                        name="duration"
+                        label="Waktu Memasak"
+                        placeholder="Contoh: 30 menit"
+                    />
 
-                    <div>
-                        <label for="servings" class="mb-1 block font-medium text-gray-700">
-                            Porsi
-                        </label>
-                        <input
-                            type="text"
-                            name="servings"
-                            id="servings"
-                            value="{{ old('servings') }}"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                            placeholder="Contoh: 4 porsi"
-                        >
-                        @error('servings')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-form.input
+                        name="servings"
+                        label="Porsi"
+                        placeholder="Contoh: 4 porsi"
+                    />
 
-                    <div>
-                        <label for="difficulty" class="mb-1 block font-medium text-gray-700">
-                            Tingkat Kesulitan
-                        </label>
-                        <select
-                            name="difficulty"
-                            id="difficulty"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                        >
-                            <option value="">Pilih tingkat kesulitan</option>
-                            <option value="Mudah" {{ old('difficulty') == 'Mudah' ? 'selected' : '' }}>Mudah</option>
-                            <option value="Sedang" {{ old('difficulty') == 'Sedang' ? 'selected' : '' }}>Sedang</option>
-                            <option value="Sulit" {{ old('difficulty') == 'Sulit' ? 'selected' : '' }}>Sulit</option>
-                        </select>
-                        @error('difficulty')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-form.select
+                        name="difficulty"
+                        label="Tingkat Kesulitan"
+                        placeholder="Pilih tingkat kesulitan"
+                        :options="[
+                            'Mudah' => 'Mudah',
+                            'Sedang' => 'Sedang',
+                            'Sulit' => 'Sulit',
+                        ]"
+                    />
 
-                    <div>
-                        <label for="category" class="mb-1 block font-medium text-gray-700">
-                            Kategori
-                        </label>
-                        <select
-                            name="category"
-                            id="category"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                        >
-                            <option value="">Pilih kategori</option>
-                            <option value="sarapan" {{ old('category') == 'sarapan' ? 'selected' : '' }}>🌅 Sarapan</option>
-                            <option value="makan siang" {{ old('category') == 'makan siang' ? 'selected' : '' }}>☀️ Makan Siang</option>
-                            <option value="makan malam" {{ old('category') == 'makan malam' ? 'selected' : '' }}>🌙 Makan Malam</option>
-                            <option value="minuman" {{ old('category') == 'minuman' ? 'selected' : '' }}>🥤 Minuman</option>
-                            <option value="camilan" {{ old('category') == 'camilan' ? 'selected' : '' }}>🍿 Camilan</option>
-                            <option value="dessert" {{ old('category') == 'dessert' ? 'selected' : '' }}>🍰 Dessert</option>
-                        </select>
-                        @error('category')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-form.select
+                        name="category"
+                        label="Kategori"
+                        placeholder="Pilih kategori"
+                        :options="[
+                            'sarapan' => '🌅 Sarapan',
+                            'makan siang' => '☀️ Makan Siang',
+                            'makan malam' => '🌙 Makan Malam',
+                            'minuman' => '🥤 Minuman',
+                            'camilan' => '🍿 Camilan',
+                            'dessert' => '🍰 Dessert',
+                        ]"
+                    />
                 </div>
-            </div>
+            </x-card>
 
             <!-- Ingredients -->
             <div class="rounded-xl bg-white p-6 shadow-md">
@@ -290,106 +240,22 @@
 
             <!-- Submit Button -->
             <div class="flex justify-end gap-4">
-                <a href="{{ route('dashboard') }}" class="rounded-lg border border-gray-300 px-6 py-3 font-medium text-gray-700 transition hover:bg-gray-50">
+                <x-button 
+                    variant="outline" 
+                    size="lg" 
+                    href="{{ route('dashboard') }}"
+                >
                     Batal
-                </a>
-                <button
+                </x-button>
+                
+                <x-button 
+                    variant="primary" 
+                    size="lg" 
                     type="submit"
-                    class="rounded-lg bg-resepin-tomato px-8 py-3 font-medium text-white shadow-md transition hover:brightness-95"
                 >
                     Simpan Resep
-                </button>
+                </x-button>
             </div>
         </form>
     </main>
-
-    <script>
-        function addIngredient() {
-            const container = document.getElementById('ingredients-container');
-            const items = container.querySelectorAll('.ingredient-item');
-            const newIndex = items.length + 1;
-            
-            const newItem = document.createElement('div');
-            newItem.className = 'ingredient-item flex items-center gap-2';
-            newItem.innerHTML = `
-                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-resepin-green/10 text-sm font-medium text-resepin-green">${newIndex}</span>
-                <input
-                    type="text"
-                    name="ingredients[]"
-                    class="flex-1 rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                    placeholder="Contoh: 2 butir telur"
-                    required
-                >
-                <button type="button" onclick="removeIngredient(this)" class="rounded-lg p-2 text-red-500 hover:bg-red-50">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </button>
-            `;
-            container.appendChild(newItem);
-        }
-
-        function removeIngredient(button) {
-            const container = document.getElementById('ingredients-container');
-            const items = container.querySelectorAll('.ingredient-item');
-            
-            if (items.length > 1) {
-                button.closest('.ingredient-item').remove();
-                updateIngredientNumbers();
-            }
-        }
-
-        function updateIngredientNumbers() {
-            const container = document.getElementById('ingredients-container');
-            const items = container.querySelectorAll('.ingredient-item');
-            items.forEach((item, index) => {
-                const span = item.querySelector('span');
-                span.textContent = index + 1;
-            });
-        }
-
-        function addStep() {
-            const container = document.getElementById('steps-container');
-            const items = container.querySelectorAll('.step-item');
-            const newIndex = items.length + 1;
-            
-            const newItem = document.createElement('div');
-            newItem.className = 'step-item flex items-start gap-2';
-            newItem.innerHTML = `
-                <span class="mt-3 flex h-8 w-8 items-center justify-center rounded-full bg-resepin-tomato/10 text-sm font-medium text-resepin-tomato">${newIndex}</span>
-                <textarea
-                    name="steps[]"
-                    rows="2"
-                    class="flex-1 rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                    placeholder="Jelaskan langkah memasak..."
-                    required
-                ></textarea>
-                <button type="button" onclick="removeStep(this)" class="mt-3 rounded-lg p-2 text-red-500 hover:bg-red-50">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </button>
-            `;
-            container.appendChild(newItem);
-        }
-
-        function removeStep(button) {
-            const container = document.getElementById('steps-container');
-            const items = container.querySelectorAll('.step-item');
-            
-            if (items.length > 1) {
-                button.closest('.step-item').remove();
-                updateStepNumbers();
-            }
-        }
-
-        function updateStepNumbers() {
-            const container = document.getElementById('steps-container');
-            const items = container.querySelectorAll('.step-item');
-            items.forEach((item, index) => {
-                const span = item.querySelector('span');
-                span.textContent = index + 1;
-            });
-        }
-    </script>
 </x-app-layout>

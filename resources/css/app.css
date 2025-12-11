@@ -47,4 +47,8 @@
 	.border-resepin-green {
 		border-color: rgb(var(--resepin-green));
 	}
+
+	.super-bold {
+  		font-weight: 900 !important; /* ultra bold */
+	}
 }

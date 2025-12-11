@@ -13,27 +13,26 @@
 
             @if (Auth::check() && $recipe->user_id === Auth::id())
                 <div class="flex items-center gap-2">
-                    <a
+                    <x-button 
+                        variant="success" 
+                        size="sm" 
                         href="{{ route('recipes.edit', $recipe) }}"
-                        class="inline-flex items-center gap-2 rounded-lg bg-resepin-green px-4 py-2 text-sm font-medium text-white transition hover:brightness-95"
+                        :icon="'<path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z\' />'"
                     >
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
                         Edit
-                    </a>
+                    </x-button>
+                    
                     <form action="{{ route('recipes.destroy', $recipe) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus resep ini?')">
                         @csrf
                         @method('DELETE')
-                        <button
+                        <x-button 
+                            variant="danger" 
+                            size="sm" 
                             type="submit"
-                            class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                            :icon="'<path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16\' />'"
                         >
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
                             Hapus
-                        </button>
+                        </x-button>
                     </form>
                 </div>
             @endif
@@ -41,9 +40,9 @@
 
         <!-- Success Message -->
         @if (session('success'))
-            <div class="mb-6 rounded-lg bg-green-100 p-4 text-green-700">
+            <x-alert type="success">
                 {{ session('success') }}
-            </div>
+            </x-alert>
         @endif
 
         <article class="overflow-hidden rounded-3xl bg-white shadow-sm">
@@ -51,7 +50,7 @@
                 <div class="relative overflow-hidden rounded-t-3xl md:rounded-none md:rounded-l-3xl">
                     <div class="h-60 md:h-auto md:aspect-[4/3]">
                         <img
-                            src="{{ $recipe->image }}"
+                            src="{{ asset('storage/' . $recipe->image) }}"
                             alt="Foto {{ $recipe->title }}"
                             class="h-full w-full object-cover"
                         />

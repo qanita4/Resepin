@@ -22,7 +22,7 @@
 <div {{ $attributes->merge(['class' => 'overflow-hidden rounded-xl bg-white shadow-sm transition-shadow duration-300 hover:shadow-md']) }}>
     <a href="{{ $href }}" class="block relative aspect-[4/3] overflow-hidden">
         <img
-            src="{{ $image }}"
+            src="{{ asset('storage/' . $image) }}"
             alt="{{ $imageAlt }}"
             class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
         />
