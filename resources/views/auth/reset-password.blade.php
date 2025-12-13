@@ -180,7 +180,7 @@
 
       <form id="resetForm" method="POST" action="{{ route('password.store') }}">
         @csrf
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+        <input type="hidden" name="token" value="{{ $token }}">
 
         <div class="input-box">
           <input 
