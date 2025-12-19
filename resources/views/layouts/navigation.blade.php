@@ -112,7 +112,7 @@
                         size="md" 
                         href="{{ route('login') }}"
                     >
-                        Masuk?
+                        Masuk
                     </x-button>
                 @endauth
             </div>

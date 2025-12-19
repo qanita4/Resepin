@@ -83,7 +83,9 @@
                     <x-form.input
                         name="servings"
                         label="Porsi"
-                        placeholder="Contoh: 4 porsi"
+                        type="number"
+                        placeholder="Contoh: 4"
+                        min="1"
                     />
 
                     <x-form.select

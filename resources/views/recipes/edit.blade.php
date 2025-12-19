@@ -115,12 +115,13 @@
                             Porsi
                         </label>
                         <input
-                            type="text"
+                            type="number"
                             name="servings"
                             id="servings"
                             value="{{ old('servings', $recipe->servings) }}"
                             class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                            placeholder="Contoh: 4 porsi"
+                            placeholder="Contoh: 4"
+                            min="1"
                         >
                         @error('servings')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -167,23 +168,6 @@
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <div>
-                        <label for="badge" class="mb-1 block font-medium text-gray-700">
-                            Badge/Label
-                        </label>
-                        <input
-                            type="text"
-                            name="badge"
-                            id="badge"
-                            value="{{ old('badge', $recipe->badge) }}"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20"
-                            placeholder="Contoh: Favorit Keluarga"
-                        >
-                        @error('badge')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
                 </div>
             </div>
 
@@ -192,7 +176,7 @@
                 <h2 class="mb-4 text-xl font-semibold text-gray-900">
                     Bahan-bahan <span class="text-red-500">*</span>
                 </h2>
-                
+    
                 <div id="ingredients-container" class="space-y-3">
                     @php
                         $ingredients = old('ingredients', $recipe->ingredients ?? []);
@@ -295,21 +279,5 @@
                 </button>
             </div>
         </form>
-
-        <!-- Delete Section -->
-        <div class="mt-8 rounded-xl border border-red-200 bg-red-50 p-6">
-            <h2 class="mb-2 text-xl font-semibold text-red-700">Zona Berbahaya</h2>
-            <p class="mb-4 text-red-600">Menghapus resep bersifat permanen dan tidak dapat dibatalkan.</p>
-            <form action="{{ route('recipes.destroy', $recipe) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus resep ini? Tindakan ini tidak dapat dibatalkan.')">
-                @csrf
-                @method('DELETE')
-                <button
-                    type="submit"
-                    class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white shadow-md transition hover:bg-red-700"
-                >
-                    Hapus Resep
-                </button>
-            </form>
-        </div>
     </main>
 </x-app-layout>

@@ -28,13 +28,23 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill($request->validated());
+
+        // Track if name changed so we can sync it to owned recipes
+        $nameChanged = $user->isDirty('name');
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
+
+        // Keep recipe author names in sync with the latest profile name
+        if ($nameChanged) {
+            $user->recipes()->update(['chef' => $user->name]);
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

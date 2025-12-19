@@ -146,6 +146,7 @@ class RecipeController extends Controller
                 'duration' => $validated['duration'] ?? null,
                 'servings' => $validated['servings'] ?? null,
                 'difficulty' => $validated['difficulty'] ?? null,
+                'category' => $validated['category'] ?? null,
                 'ingredients' => $ingredients,
                 'steps' => $steps,
                 'initial_rating' => 0,
@@ -215,6 +216,7 @@ class RecipeController extends Controller
             'duration' => $validated['duration'] ?? null,
             'servings' => $validated['servings'] ?? null,
             'difficulty' => $validated['difficulty'] ?? null,
+            'category' => $validated['category'] ?? null,
             'ingredients' => $ingredients,
             'steps' => $steps,
         ]);

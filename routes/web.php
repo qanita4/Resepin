@@ -1,11 +1,10 @@
 <?php
 
-use App\Mail\mail;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RecipeLikeController;
 use App\Http\Controllers\RecipeCommentController;
+use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\RecipeLikeController;
+use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
@@ -62,10 +61,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::get('/send-welcome-mail', function () {
-   Mail::to('aaa@example.com')->send(new mail());
 });
 
 require __DIR__.'/auth.php';

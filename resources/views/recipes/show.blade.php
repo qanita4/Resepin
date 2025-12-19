@@ -56,9 +56,9 @@
                         />
                     </div>
 
-                    @if (! empty($recipe->badge))
+                    @if (! empty($recipe->category))
                         <span class="absolute left-4 top-4 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-resepin-tomato shadow">
-                            {{ $recipe->badge }}
+                            {{ $recipe->category }}
                         </span>
                     @endif
                 </div>
