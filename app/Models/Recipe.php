@@ -43,6 +43,18 @@ class Recipe extends Model
         'is_liked',
     ];
 
+    /**
+     * Boot the model.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (Recipe $recipe) {
+            // Delete all likes and comments for this recipe
+            $recipe->likes()->delete();
+            $recipe->comments()->delete();
+        });
+    }
+
     public function likes(): HasMany
     {
         return $this->hasMany(RecipeLike::class);

@@ -26,7 +26,8 @@ class RecipeCommentController extends Controller
             'comment' => $sanitizedComment,
         ]);
 
-        return back()->with('status', 'Komentar berhasil ditambahkan.');
+        return redirect()->to(url()->previous() . '#comments')
+            ->with('status', 'Komentar berhasil ditambahkan.');
     }
 
     public function destroy(Recipe $recipe, RecipeComment $comment): RedirectResponse
@@ -37,6 +38,7 @@ class RecipeCommentController extends Controller
 
         $comment->delete();
 
-        return back()->with('status', 'Komentar berhasil dihapus.');
+        return redirect()->to(url()->previous() . '#comments')
+            ->with('status', 'Komentar berhasil dihapus.');
     }
 }

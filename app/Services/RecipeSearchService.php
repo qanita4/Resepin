@@ -72,7 +72,7 @@ class RecipeSearchService
     public function getPopular(int $limit = 6)
     {
         return $this->getBaseQuery()
-            ->where('likes_count', '>', 0)
+            ->having('likes_count', '>', 0)
             ->orderByDesc('likes_count')
             ->take($limit)
             ->get();
