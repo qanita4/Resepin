@@ -10,6 +10,7 @@
     'buttonText' => 'Lihat Resep',
     'contentClass' => '',
     'actionsClass' => 'mt-4',
+    'dusk' => null,
 ])
 
 @php
@@ -17,12 +18,13 @@
     $contentClasses = trim($contentClass !== '' ? $contentClass : 'p-4');
     $hasCustomSlot = trim((string) $slot) !== '';
     $hasMetaSlot = isset($meta) && ! $meta->isEmpty();
+    $imageSrc = $image ? asset('storage/' . $image) : asset('images/salad_11661824.png');
 @endphp
 
-<div {{ $attributes->merge(['class' => 'overflow-hidden rounded-xl bg-white shadow-sm transition-shadow duration-300 hover:shadow-md']) }}>
+<div {{ $attributes->merge(['class' => 'overflow-hidden rounded-xl bg-white shadow-sm transition-shadow duration-300 hover:shadow-md']) }} @if($dusk) dusk="{{ $dusk }}" @endif>
     <a href="{{ $href }}" class="block relative aspect-[4/3] overflow-hidden">
         <img
-            src="{{ asset('storage/' . $image) }}"
+            src="{{ $imageSrc }}"
             alt="{{ $imageAlt }}"
             class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
         />

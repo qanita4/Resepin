@@ -12,6 +12,7 @@
     <x-danger-button
         x-data=""
         x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
+        dusk="delete-account"
     >{{ __('Delete Account') }}</x-danger-button>
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
@@ -36,6 +37,7 @@
                     type="password"
                     class="mt-1 block w-3/4"
                     placeholder="{{ __('Password') }}"
+                    dusk="delete-password"
                 />
 
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
@@ -46,7 +48,7 @@
                     {{ __('Cancel') }}
                 </x-secondary-button>
 
-                <x-danger-button class="ms-3">
+                <x-danger-button class="ms-3" dusk="confirm-delete">
                     {{ __('Delete Account') }}
                 </x-danger-button>
             </div>

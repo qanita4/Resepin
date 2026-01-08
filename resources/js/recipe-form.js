@@ -1,8 +1,3 @@
-/**
- * Recipe Form - Dynamic Ingredients & Steps Management
- * Handles adding/removing ingredients and cooking steps dynamically
- */
-
 export class RecipeFormManager {
     constructor() {
         this.ingredientsContainer = document.getElementById('ingredients-container');

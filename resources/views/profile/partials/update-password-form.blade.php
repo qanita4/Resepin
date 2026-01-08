@@ -25,6 +25,7 @@
             type="button"
             x-show="!editing"
             @click="editing = true"
+            dusk="edit-password-btn"
             class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-resepin-tomato focus:ring-offset-2"
         >
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,6 +45,7 @@
                 id="update_password_current_password" 
                 name="current_password" 
                 type="password" 
+                dusk="old-password"
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition" 
                 :class="!editing && 'bg-gray-100 cursor-not-allowed'" 
                 autocomplete="current-password" 
@@ -59,6 +61,7 @@
                 id="update_password_password" 
                 name="password" 
                 type="password" 
+                dusk="new-password"
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition" 
                 :class="!editing && 'bg-gray-100 cursor-not-allowed'" 
                 autocomplete="new-password" 
@@ -74,6 +77,7 @@
                 id="update_password_password_confirmation" 
                 name="password_confirmation" 
                 type="password" 
+                dusk="new-password-confirmation"
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition" 
                 :class="!editing && 'bg-gray-100 cursor-not-allowed'" 
                 autocomplete="new-password" 
@@ -84,10 +88,11 @@
         </div>
 
         <div class="flex items-center gap-4" x-show="editing" x-transition>
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button dusk="save-password">{{ __('Save') }}</x-primary-button>
             <button
                 type="button"
                 @click="cancelEdit()"
+                dusk="cancel-password"
                 class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50"
             >
                 {{ __('Cancel') }}
@@ -112,7 +117,7 @@
             <svg class="h-6 w-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="font-medium">Password berhasil diperbarui!</span>
+            <span class="font-medium" dusk="password-success-message">Password berhasil diperbarui!</span>
             <button @click="show = false" class="ml-2 rounded-full p-1 hover:bg-green-700 transition">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

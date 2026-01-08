@@ -83,7 +83,7 @@
                     @endif
                 </div>
             @else
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" dusk="popular-recipes">
                     @foreach ($recipes as $recipe)
                         <x-recipe-card
                             class="shadow-md hover:shadow-lg"
@@ -91,6 +91,7 @@
                             :title="$recipe->title"
                             :chef="$recipe->chef"
                             :href="route('recipes.show', $recipe->slug)"
+                            :dusk="'popular-card-' . $recipe->id"
                         >
                             <x-slot:meta>
                                 <div class="flex items-center gap-3">

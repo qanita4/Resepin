@@ -62,7 +62,7 @@
                     <!-- Profile Dropdown -->
                     <x-dropdown align="right" width="48" class="relative">
                         <x-slot name="trigger">
-                            <button aria-haspopup="true" aria-expanded="false" aria-label="Open user menu" class="relative inline-flex items-center p-0.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-resepin-tomato">
+                            <button dusk="profile-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Open user menu" class="relative inline-flex items-center p-0.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-resepin-tomato">
                                 <span class="sr-only">Open user menu</span>
                                 <img
                                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
@@ -76,7 +76,7 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')">
+                            <x-dropdown-link :href="route('profile.edit')" dusk="menu-profile">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
