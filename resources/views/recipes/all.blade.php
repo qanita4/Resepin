@@ -69,7 +69,7 @@
 
             <!-- Pagination -->
             <div class="mt-8">
-                {{ $recipes->withQueryString()->links() }}
+                {{ $recipes->withQueryString()->links('vendor.pagination.resepin') }}
             </div>
         @endif
     </main>

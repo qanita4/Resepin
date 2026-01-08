@@ -6,6 +6,8 @@
     'error' => null,
     'hint' => null,
     'value' => '',
+    'min' => null,
+    'max' => null,
 ])
 
 <div {{ $attributes->merge(['class' => '']) }}>
@@ -24,6 +26,8 @@
         id="{{ $name }}"
         value="{{ old($name, $value) }}"
         {{ $required ? 'required' : '' }}
+        @if($min !== null) min="{{ $min }}" @endif
+        @if($max !== null) max="{{ $max }}" @endif
         {{ $attributes->whereStartsWith('placeholder')->merge([
             'class' => 'w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-resepin-green focus:outline-none focus:ring-2 focus:ring-resepin-green/20'
         ]) }}
